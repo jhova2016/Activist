@@ -6,10 +6,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    app:cardElevation="10dp"
     app:cardCornerRadius="16dp"
     android:layout_margin="6dp"
-    app:cardBackgroundColor="@color/Hint"
+    app:cardBackgroundColor="@color/AuxWhite"
     >
 
     <LinearLayout
@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:id="@+id/UP"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/AuxBlack"
@@ -28,7 +28,12 @@
             >
 
 
-
+            <ImageView
+                android:id="@+id/imageViewUp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="8dp"
+                app:srcCompat="@drawable/up" />
         </LinearLayout>
 
 
@@ -46,7 +51,6 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Hint"
                 android:orientation="vertical"
                 android:layout_margin="8dp"
 
@@ -60,12 +64,7 @@
     >
 
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
 
-        app:srcCompat="@drawable/name" />
     <TextView
         android:id="@+id/Name"
         android:layout_width="wrap_content"
@@ -73,19 +72,21 @@
         android:text="Nombre"
         android:textColor="@color/AuxBlack"
         android:gravity="left"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_weight="1"
-        android:layout_marginEnd="16dp"
+
 
         tools:ignore="RtlHardcoded" />
 
         </LinearLayout>
+
 
                 <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+                    android:layout_marginTop="8dp"
             >
 
 
@@ -93,47 +94,22 @@
 
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                app:tint="@color/Gray"
                 app:srcCompat="@drawable/direction" />
 
                     <TextView
                         android:id="@+id/Direction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+
                         android:text="Direccion"
                         android:textColor="@color/AuxBlack"
                         android:gravity="left"
                         android:textSize="16sp"
-
-                        android:layout_marginEnd="16dp"
-
-                        tools:ignore="RtlHardcoded" />
-
-                        </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    >
-
-
-                    <ImageView
-
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        app:srcCompat="@drawable/phone" />
-
-                    <TextView
-                        android:id="@+id/Phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Telefono"
-                        android:textColor="@color/AuxBlack"
-                        android:gravity="left"
-                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
                         android:layout_weight="1"
                         android:layout_marginRight="16dp"
+
 
                         tools:ignore="RtlHardcoded" />
 
@@ -151,6 +127,38 @@
 
                         android:layout_width="15dp"
                         android:layout_height="15dp"
+                        app:tint="@color/Gray"
+
+                        app:srcCompat="@drawable/phone" />
+
+                    <TextView
+                        android:id="@+id/Phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Telefono"
+                        android:textColor="@color/AuxBlack"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="16dp"
+                        tools:ignore="RtlHardcoded" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+
+
+                    <ImageView
+
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        app:tint="@color/Gray"
                         app:srcCompat="@drawable/electorkey" />
 
                     <TextView
@@ -158,12 +166,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="elector key"
-                        android:textColor="@color/Col5"
+                        android:textColor="@color/Col1"
                         android:gravity="left"
-                        android:textSize="12sp"
+                        android:textSize="16sp"
                         android:layout_weight="1"
                         android:layout_marginRight="16dp"
-
+                        android:layout_margin="8dp"
                         tools:ignore="RtlHardcoded" />
 
 

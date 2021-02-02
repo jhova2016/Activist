@@ -13,188 +13,433 @@
     >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-
-            <ImageView
-                android:id="@+id/Photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/Col1"
-                app:srcCompat="@drawable/photo_user"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="0dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/FAB_Delet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="16dp"
-                android:scaleType="fitXY"
-                app:fabSize="mini"
-                app:srcCompat="@drawable/delet" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            >
-
-
-
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Hint"
                 android:orientation="vertical"
-                android:layout_margin="8dp"
-
-                >
-
-                <TextView
-                    android:id="@+id/Name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre"
-                    android:textColor="@color/AuxBlack"
-                    android:gravity="left"
-                    android:textSize="16sp"
-
-                    android:layout_marginEnd="16dp"
-
-                    tools:ignore="RtlHardcoded" />
-                <TextView
-                    android:id="@+id/Direction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Direccion"
-                    android:textColor="@color/AuxBlack"
-                    android:gravity="left"
-                    android:textSize="16sp"
-
-                    android:layout_marginEnd="16dp"
-
-                    tools:ignore="RtlHardcoded" />
-                <TextView
-                    android:id="@+id/Phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Telefono"
-                    android:textColor="@color/AuxBlack"
-                    android:gravity="left"
-                    android:textSize="16sp"
-                    android:layout_weight="1"
-                    android:layout_marginRight="16dp"
-
-                    tools:ignore="RtlHardcoded" />
-
-
-                <TextView
-                    android:id="@+id/ElectorKey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="quien_reporto"
-                    android:textColor="@color/Col5"
-                    android:gravity="left"
-                    android:textSize="12sp"
-                    android:layout_weight="1"
-                    android:layout_marginRight="16dp"
-
-                    tools:ignore="RtlHardcoded" />
+                android:background="@color/AuxWhite"
+                android:weightSum="9"
+                android:fitsSystemWindows="true"
+                tools:context=".UI.MainActivity">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:id="@+id/Notes"
-                        android:layout_width="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="clave de elector"
-                        android:textColor="@color/Col5"
-                        android:gravity="left"
-                        android:textSize="12sp"
-                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="right|center_vertical"
+                        android:background="@color/Col1"
+                        >
+                        <TextView
 
-                        android:layout_marginEnd="16dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Información"
+                            android:textColor="@color/AuxWhite"
+                            android:gravity="left"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="16dp"
 
-                        tools:ignore="RtlHardcoded" />
 
-                    <TextView
-                        android:id="@+id/Date"
-                        android:layout_width="0dp"
+                            tools:ignore="RtlHardcoded" />
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/FAB_Edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_margin="8dp"
+                            android:scaleType="fitXY"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/Col4"
+                            app:srcCompat="@drawable/edith" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/FAB_Delet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_margin="8dp"
+                            android:scaleType="fitXY"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/Col2"
+                            app:srcCompat="@drawable/delet" />
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fecha de registro"
-                        android:textColor="@color/Col5"
-                        android:gravity="left"
-                        android:textSize="12sp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        >
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="16dp"
+                            app:cardCornerRadius="16dp"
+
+                            >
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+
+                                >
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/FABPhoto"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="left"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/Col3"
+                                    app:fabCustomSize="40dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/Photo"
+                                    app:srcCompat="@drawable/photo" />
+
+                                <ImageView
+                                    android:id="@+id/Photo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/Col2"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/photo_user" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="8dp"
+                            >
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/Lugar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginRight="16dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="6dp"
+
+                                >
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Nombre*"
+
+                                    android:textColorHint="@color/Col1">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/Name"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/AuxWhite"
+                                        android:inputType="textPersonName"
+                                        android:maxLines="1"
+                                        android:textColorHighlight="@color/black" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginRight="16dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="6dp">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Clave de elector*"
+                                    android:textColorHint="@color/Col1">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/ElectorKey"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/AuxWhite"
+                                        android:inputType="text"
+                                        android:maxLines="1"
+                                        android:textColorHighlight="@color/black" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+
+                            </androidx.cardview.widget.CardView>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
                         android:layout_weight="1"
+                        app:cardCornerRadius="6dp"
 
-                        android:layout_marginEnd="16dp"
+                        >
 
-                        tools:ignore="RtlHardcoded" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Direccion*"
+                            android:textColorHint="@color/Col1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Direction"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/AuxWhite"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textColorHighlight="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="6dp"
+
+                        >
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Celular*"
+                            android:textColorHint="@color/Col1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/AuxWhite"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:textColorHighlight="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="6dp">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Notas"
+                            android:textColorHint="@color/Col1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Notes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/AuxWhite"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textColorHighlight="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/Col4"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="8dp"
+                        android:padding="8dp"
+
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fecha de registro"
+                                android:textColor="@color/AuxBlack"
+                                android:gravity="left"
+                                android:textSize="12sp"
+                                android:layout_weight="1"
+
+                                android:layout_marginEnd="16dp"
+
+                                tools:ignore="RtlHardcoded" />
+                            <TextView
+                                android:id="@+id/Date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fecha de registro"
+                                android:textColor="@color/AuxWhite"
+                                android:gravity="left"
+                                android:textSize="12sp"
+                                android:layout_weight="1"
+
+                                android:layout_marginEnd="16dp"
+
+                                tools:ignore="RtlHardcoded" />
+
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Estado en la nube"
+                                android:textColor="@color/AuxBlack"
+                                android:gravity="left"
+                                android:textSize="12sp"
+                                android:layout_weight="1"
+
+                                android:layout_marginEnd="16dp"
+
+                                tools:ignore="RtlHardcoded" />
+                            <TextView
+                                android:id="@+id/Up"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="subido"
+                                android:textColor="@color/AuxWhite"
+                                android:gravity="left"
+                                android:textSize="12sp"
+                                android:layout_weight="1"
+
+                                android:layout_marginEnd="16dp"
+
+                                tools:ignore="RtlHardcoded" />
+
+
+                        </LinearLayout>
 
 
 
 
+
+
+
+
+
+                    </LinearLayout>
+
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:orientation="horizontal"
+
+                        android:background="@color/Hint"
+
+
+
+                        >
+
+
+                        <Button
+                            android:id="@+id/BtnCancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:backgroundTint="@color/AuxWhite"
+                            android:text="cancelar"
+                            android:textColor="@color/Col4"
+                            android:layout_margin="8dp"
+
+                            tools:ignore="NestedWeights" />
+
+                        <Button
+                            android:id="@+id/BtnSave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:backgroundTint="@color/Col5"
+                            android:text="guardar"
+                            android:textColor="@color/AuxWhite"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="8dp"
+
+
+
+                            />
+
+                    </LinearLayout>
                 </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/DirectBoss"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Jefe directo"
-                    android:textColor="@color/Col5"
-                    android:gravity="left"
-                    android:textSize="12sp"
-                    android:layout_weight="1"
-
-                    android:layout_marginEnd="16dp"
-
-                    tools:ignore="RtlHardcoded" />
-
-                <TextView
-                    android:id="@+id/Up"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="subido"
-                    android:textColor="@color/Col5"
-                    android:gravity="left"
-                    android:textSize="12sp"
-                    android:layout_weight="1"
-
-                    android:layout_marginEnd="16dp"
-
-                    tools:ignore="RtlHardcoded" />
-
 
 
             </LinearLayout>
 
-        </LinearLayout>
 
 
-    </LinearLayout>
+
+
+
 
 
 </androidx.cardview.widget.CardView>

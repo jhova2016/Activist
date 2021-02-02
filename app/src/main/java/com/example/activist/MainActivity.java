@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -73,13 +76,14 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog DialogInformationActivist;
 
     File photoFile;
+    String AuxPhotoPath;
     Bitmap compressedFile;
     private Uri compressedFilePath;
 
     String imageFileName;
 
     static final int REQUEST_TAKE_PHOTO = 1;
-    String currentPhotoPath;
+    String currentPhotoPath=null;
 
 
     RecyclerView RecyclerViewActivist;
@@ -89,7 +93,13 @@ public class MainActivity extends AppCompatActivity {
     TextView ElectorKey;
 
     SharedPreferences sharedPreferences;
-    ImageButton BtnExit;
+    ImageView BtnExit;
+
+    AlertDialog waitUploadData;
+
+    int Aux2=0;
+
+    final ArrayList<String> ElementsEK = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -181,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        BtnSaveFirestorage.setOnClickListener(v -> FillFirebase());
+        BtnSaveFirestorage.setOnClickListener(v -> FillArray());
 
         FAB_NewActivist.setOnClickListener(v ->
         {
@@ -192,103 +202,212 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public int Remaining()
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Cursor w;
+        BD_Calles dbHelper2 = new BD_Calles(this);
+        final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
+
+        int Aux=0;
+
+        w= dbsql2.rawQuery("SELECT _id ,photopath ,name ,direction ,phone ,electorkey ,directboss ,notes ,date ,up    FROM tabladecalles", null);
+        w.moveToFirst();
+        do
+        {
+            if((w.getString(w.getColumnIndex("up"))).equals("0")) {
+                Aux++;
+
+            }
+
+
+            }while (w.moveToNext());
+
+        return Aux;
+    }
+
+
+    public void FillArray()
+    {
+        waitUploadData = newProgressDialog("Subiendo datos a la nube", "NO salga de la aplicacion... ", false);
+        waitUploadData.show();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("ElectorKeys")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                ElementsEK.add(document.get("EK").toString());
+
+                            }
+                            FillFirebase();
+                            Log.w(TAG, "--------------------------------------------------------------------: "+ElementsEK.size(), task.getException());
+
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+
+
+    }
 
     public void FillFirebase()
     {
+
+
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            // Si hay conexión a Internet en este momento
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Cursor w;
-            BD_Calles dbHelper2 = new BD_Calles(this);
-            final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
 
-            w= dbsql2.rawQuery("SELECT _id ,photopath ,name ,direction ,phone ,electorkey ,directboss ,notes ,date ,up    FROM tabladecalles", null);
-            w.moveToFirst();
-            do
+
+
+            int Aux=Remaining();
+
+            if(Aux>0)
             {
-                try {
-                    if((w.getString(w.getColumnIndex("up"))).equals("0"))
-                    {
+                //waitUploadData.show();
+                Aux2=0;
+                // Si hay conexión a Internet en este momento
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Cursor w;
+                BD_Calles dbHelper2 = new BD_Calles(this);
+                final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
 
-                        StorageReference mStorage;
-                        StorageReference filePath;
+                w= dbsql2.rawQuery("SELECT _id ,photopath ,name ,direction ,phone ,electorkey ,directboss ,notes ,date ,up    FROM tabladecalles", null);
+                w.moveToFirst();
+                do
+                {
+                    try {
+                        if((w.getString(w.getColumnIndex("up"))).equals("0"))
+                        {
 
-                        mStorage = FirebaseStorage.getInstance().getReference();
-                        filePath = mStorage.child(w.getString(w.getColumnIndex("electorkey")));
+                            // Create a new user with a first and last name
+                            String AuxId=w.getString(w.getColumnIndex("_id"));
+                            Map<String, Object> Activist = new HashMap<>();
+                            Activist.put("PotoPath", (w.getString(w.getColumnIndex("photopath"))));
+                            Activist.put("Name", (w.getString(w.getColumnIndex("name"))));
+                            Activist.put("Direction", (w.getString(w.getColumnIndex("direction"))));
+                            Activist.put("Phone", (w.getString(w.getColumnIndex("phone"))));
+                            Activist.put("ElectorKey", (w.getString(w.getColumnIndex("electorkey"))));
+                            Activist.put("DirectBoss",(w.getString(w.getColumnIndex("directboss"))));
+                            Activist.put("Notes", (w.getString(w.getColumnIndex("notes"))));
+                            Activist.put("Date", (w.getString(w.getColumnIndex("date"))));
+                            Activist.put("Employment", 1815);
+                            Activist.put("Section", 1815);
+
+                            Map<String, Object> ElectorKey = new HashMap<>();
+                            ElectorKey.put("EK", (w.getString(w.getColumnIndex("electorkey"))));
+
+                            StorageReference mStorage;
+                            StorageReference filePath;
+
+                            mStorage = FirebaseStorage.getInstance().getReference();
+                            filePath = mStorage.child(w.getString(w.getColumnIndex("electorkey")));
 
 
-                        File imgFile = new File(w.getString(w.getColumnIndex("photopath")));
-                        if(imgFile.exists()){
+                            ///checar por queno encuentra eventoss regitrados
 
-                            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                            compressedFile = Bitmap.createScaledBitmap(myBitmap, 720, 720, true);
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            compressedFile.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                            if(CheckEList(w.getString(w.getColumnIndex("electorkey"))))
+                            {
 
-                            byte[] data = baos.toByteArray();
-                            filePath.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                File imgFile = new File(w.getString(w.getColumnIndex("photopath")));
+                                if(imgFile.exists()){
 
-                                @Override
-                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                    Toast.makeText(getBaseContext(),"Subido",Toast.LENGTH_SHORT).show();
+                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                    compressedFile = Bitmap.createScaledBitmap(myBitmap, 720, 720, true);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    compressedFile.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
+                                    byte[] data = baos.toByteArray();
+                                    filePath.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+                                        @Override
+                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                            // Add a new document with a generated ID
+                                            db.collection("Elements")
+                                                    .add(Activist)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+
+
+
+                                                            db.collection("ElectorKeys")
+                                                                    .add(ElectorKey)
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentReference documentReference) {
+
+                                                                            String[] args = new String []{"1",AuxId};
+
+                                                                            dbsql2.execSQL("UPDATE tabladecalles SET up=? WHERE  _id=?",args);
+
+                                                                            Aux2++;
+                                                                            if(Aux2==Aux)
+                                                                            {
+                                                                                FillRecycler();
+                                                                                waitUploadData.dismiss();
+                                                                            }
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Log.w(TAG, "Error adding document", e);
+                                                                        }
+                                                                    });
+
+
+
+
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w(TAG, "Error adding document", e);
+                                                        }
+                                                    });
+
+                                        }
+                                    });
                                 }
-                            });
+
+                            }else
+                            {
+                                Toast.makeText(this,"Esta persona ya ha sido registrada antes ",Toast.LENGTH_LONG).show();
+                                Aux2++;
+                                if(Aux2==Aux)
+                                {
+                                    FillRecycler();
+                                    waitUploadData.dismiss();
+                                }
+                            }
+
+
                         }
 
 
 
-                        // Create a new user with a first and last name
-                        Map<String, Object> Activist = new HashMap<>();
-                        Activist.put("PotoPath", (w.getString(w.getColumnIndex("photopath"))));
-                        Activist.put("Name", (w.getString(w.getColumnIndex("name"))));
-                        Activist.put("Direction", (w.getString(w.getColumnIndex("direction"))));
-                        Activist.put("Phone", (w.getString(w.getColumnIndex("phone"))));
-                        Activist.put("ElectorKey", (w.getString(w.getColumnIndex("electorkey"))));
-                        Activist.put("DirectBoss",(w.getString(w.getColumnIndex("directboss"))));
-                        Activist.put("Notes", (w.getString(w.getColumnIndex("notes"))));
-                        Activist.put("Date", (w.getString(w.getColumnIndex("date"))));
-                        Activist.put("Employment", 1815);
-                        Activist.put("Section", 1815);
-
-// Add a new document with a generated ID
-                        db.collection("Elements")
-                                .add(Activist)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-
-
-
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error adding document", e);
-                                    }
-                                });
-
-                        String[] args = new String []{"1",w.getString(w.getColumnIndex("_id"))};
-
-
-                        dbsql2.execSQL("UPDATE tabladecalles SET up=? WHERE  _id=?",args);
+                    }catch (Exception e)
+                    {
 
                     }
 
-                    FillRecycler();
 
-                }catch (Exception e)
-                {
-
-                }
+                }while (w.moveToNext());
 
 
-            }while (w.moveToNext());
+            }else
+            {Toast.makeText(this, "Todas las personas ya estan registradas :)", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             // No hay conexión a Internet en este momento
             Toast toast1 = Toast.makeText(this, "No se puede actalizar su nube de datos\nTalvez no esta conectado a internet o no tiene los datos moviles activados", Toast.LENGTH_SHORT);toast1.show();
@@ -340,6 +459,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean CheckEList(String EK)
+    {
+        System.out.println("''''''''''''''''''''''''''''''Entro");
+        boolean Aux=true;
+        for (int i=0;i<ElementsEK.size();i++)
+        {
+            System.out.println("&&&&&&&&&&&&&&&&&&&&& ElementsEK.get(i)= "+ElementsEK.get(i)+"    "+"EK= "+EK);
+            if(ElementsEK.get(i).equals(EK))
+            {
+
+
+                Aux=false;
+            }
+
+        }
+
+        return Aux;
+
+    }
+
 
     //Insertar un nuevo comentario
     public void InsertToDB(String PhotoPath,String name,String direction, String phone, String electrokey, String directboss, String notes,String date,String up){
@@ -370,7 +509,7 @@ public class MainActivity extends AppCompatActivity {
                     DialogNewActivist.dismiss();
                     FillRecycler();
 
-                }
+                }else
                 {
                     Toast.makeText(this,"Falta capturar la foto", Toast.LENGTH_LONG).show();
                 }
@@ -378,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(this,"Todos Los campos deben ser llenados", Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Todos Los campos con * deben ser llenados", Toast.LENGTH_LONG).show();
 
             }
 
@@ -389,15 +528,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Borrar un comentario a partir de su id
-    public void borrar(int id){
-        String[] args = new String[]{String.valueOf(id)};
-        //Sql_db_activist .delete("comments", "_id=?", args);
-    }
 
 
     private void DialogNewActivist()
     {
+
+        currentPhotoPath=null;
         android.app.AlertDialog.Builder builder=new android.app.AlertDialog.Builder(this).setCancelable(false);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_new_activist,null);
@@ -454,6 +590,8 @@ public class MainActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera activity to handle the intent
+
+
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 
 
@@ -505,6 +643,10 @@ public class MainActivity extends AppCompatActivity {
                     .into(Photo);
 
         }
+        else
+        {
+            currentPhotoPath=null;
+        }
 
 
 
@@ -553,39 +695,58 @@ public class MainActivity extends AppCompatActivity {
             String date ,
             String up )
     {
+        currentPhotoPath=null;
 
         android.app.AlertDialog.Builder builder=new android.app.AlertDialog.Builder(this).setCancelable(true);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_information_activist,null);
 
-        ImageView Photo2=view.findViewById(R.id.Photo);
+        Button Save=view.findViewById(R.id.BtnSave);
+        Button Cancel=view.findViewById(R.id.BtnCancel);
 
-        TextView Name=view.findViewById(R.id.Name);
-        TextView Direction=view.findViewById(R.id.Direction);
-        TextView Phone=view.findViewById(R.id.Phone);
-        TextView ElectorKey=view.findViewById(R.id.ElectorKey);
-        TextView DirectBoss=view.findViewById(R.id.DirectBoss);
-        TextView Notes=view.findViewById(R.id.Notes);
+        Photo=view.findViewById(R.id.Photo);
+
+        EditText Name=view.findViewById(R.id.Name);
+        EditText Direction=view.findViewById(R.id.Direction);
+        EditText Phone=view.findViewById(R.id.Phone);
+        EditText ElectorKey=view.findViewById(R.id.ElectorKey);
+        EditText Notes=view.findViewById(R.id.Notes);
+
         TextView Auxphoto=view.findViewById(R.id.Date);
         TextView Up=view.findViewById(R.id.Up);
 
+
         FloatingActionButton Delet=view.findViewById(R.id.FAB_Delet);
+        FloatingActionButton Edit=view.findViewById(R.id.FAB_Edit);
+
+        FloatingActionButton EditPhoto=view.findViewById(R.id.FABPhoto);
+
+        EditPhoto.setEnabled(false);
+        Name.setEnabled(false);
+        Direction.setEnabled(false);
+        Phone.setEnabled(false);
+        ElectorKey.setEnabled(false);
+        Notes.setEnabled(false);
+        Save.setEnabled(false);
+
+       AuxPhotoPath=photoPath;
+
+
 
         Name.setText(name);
         Direction.setText(direction);
         Phone.setText(phone);
         ElectorKey.setText(electorKey);
-        DirectBoss.setText(directBoss);
         Notes.setText(notes);
         Auxphoto.setText(date);
         Up.setText(up);
 
        try {
-           File imgFile = new File(photoPath);
+           File imgFile = new File(AuxPhotoPath);
            if(imgFile.exists()){
 
                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-               Photo2.setImageBitmap(myBitmap);
+               Photo.setImageBitmap(myBitmap);
 
 
 
@@ -598,10 +759,80 @@ public class MainActivity extends AppCompatActivity {
 
        Delet.setOnClickListener(v ->
        {
-           DialogEliminarActivist(Id);
-           DialogDeletActivist.show();
+
+
+           if(up.equals("0"))
+           {
+               DialogEliminarActivist(Id);
+               DialogDeletActivist.show();
+           }
+           else
+           {
+               Toast.makeText(this,"No se pueden borrar Usuarios que ya se subieron a la nube.",Toast.LENGTH_LONG).show();
+           }
+
        });
 
+       Save.setOnClickListener(v ->
+       {
+           if(currentPhotoPath!=null)
+           {
+               AuxPhotoPath=currentPhotoPath;
+           }
+
+           if(!Name.getText().toString().equals("")&&!Direction.getText().toString().equals("")&&!Phone.getText().toString().equals("")&&!ElectorKey.getText().toString().equals(""))
+           {
+               BD_Calles dbHelper2 = new BD_Calles(this);
+               final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
+
+               String[] args = new String []{AuxPhotoPath,Name.getText().toString(),Direction.getText().toString(),Phone.getText().toString(),ElectorKey.getText().toString(),Notes.getText().toString(),Id};
+               dbsql2.execSQL("UPDATE tabladecalles SET photopath=? ,name=? ,direction=? ,phone=? ,electorkey=? ,notes=? WHERE  _id=?",args);
+               DialogInformationActivist.dismiss();
+               FillRecycler();
+           }
+           else
+           {
+               Toast.makeText(this,"Todos Los campos con * deben ser llenados", Toast.LENGTH_LONG).show();
+
+           }
+
+
+
+
+       });
+
+       Cancel.setOnClickListener(v ->
+       {
+           DialogInformationActivist.dismiss();
+
+       });
+
+       Edit.setOnClickListener(v ->
+       {
+           if(up.equals("0"))
+           {
+               Save.setEnabled(true);
+               EditPhoto.setEnabled(true);
+               Name.setEnabled(true);
+               Direction.setEnabled(true);
+               Phone.setEnabled(true);
+               ElectorKey.setEnabled(true);
+               Notes.setEnabled(true);
+           }
+           else
+           {
+               Toast.makeText(this,"No se pueden editar Usuarios que ya se subieron a la nube.",Toast.LENGTH_LONG).show();
+           }
+
+
+       });
+
+       EditPhoto.setOnClickListener(v ->
+       {
+           dispatchTakePictureIntent();
+
+
+       });
 
 
 
@@ -710,5 +941,19 @@ public class MainActivity extends AppCompatActivity {
         DialogDeletActivist.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
+
+    public ProgressDialog newProgressDialog(String Title, String Message, boolean isCancelable){
+        ProgressDialog nPD = new ProgressDialog(this);
+        nPD.setTitle(Title); // Setting Title
+        nPD.setMessage(Message); // Setting Message
+        nPD.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        if (isCancelable){
+            nPD.setCancelable(true);
+        } else {
+            nPD.setCancelable(false);
+        }
+        return nPD;
+    }
+
 
 }

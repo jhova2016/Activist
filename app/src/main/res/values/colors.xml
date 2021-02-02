@@ -25,6 +25,7 @@
     <color name="AuxBlack">#000000</color>
 
     <color name="Hint">#E7E7E7</color>
+    <color name="Gray">#BFBFBF</color>
 
 
 </resources>

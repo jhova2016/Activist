@@ -18,6 +18,27 @@
         android:weightSum="9"
         android:fitsSystemWindows="true"
         tools:context=".UI.MainActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Col1"
+            >
+            <TextView
+                android:id="@+id/Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nuevo Activista"
+                android:textColor="@color/AuxWhite"
+                android:gravity="left"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:layout_margin="16dp"
+
+                android:layout_marginEnd="16dp"
+
+                tools:ignore="RtlHardcoded" />
+
+        </LinearLayout>
 
 
         <LinearLayout
@@ -96,7 +117,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Nombre"
+                            android:hint="Nombre*"
 
                             android:textColorHint="@color/Col1">
 
@@ -124,7 +145,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Clave de elector"
+                            android:hint="Clave de elector*"
                             android:textColorHint="@color/Col1">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -132,7 +153,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/AuxWhite"
-                                android:inputType="text"
+                                android:inputType="textCapCharacters"
                                 android:maxLines="1"
                                 android:textColorHighlight="@color/black" />
                         </com.google.android.material.textfield.TextInputLayout>
@@ -163,7 +184,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Direccion"
+                    android:hint="Direccion*"
                     android:textColorHint="@color/Col1">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -194,7 +215,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Celular"
+                            android:hint="Telefono*"
                             android:textColorHint="@color/Col1">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -265,7 +286,7 @@
 
                     android:backgroundTint="@color/AuxWhite"
                     android:text="cancelar"
-                    android:textColor="@color/Col1"
+                    android:textColor="@color/Col4"
                     android:layout_margin="8dp"
 
                     tools:ignore="NestedWeights" />
@@ -275,7 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:backgroundTint="@color/Col2"
+                    android:backgroundTint="@color/Col5"
                     android:text="guardar"
                     android:textColor="@color/AuxWhite"
                     android:layout_marginRight="16dp"

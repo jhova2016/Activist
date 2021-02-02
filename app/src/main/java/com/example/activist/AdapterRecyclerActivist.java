@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,12 +51,15 @@ public class AdapterRecyclerActivist extends RecyclerView.Adapter<com.example.ac
         {
 
             case "0":
-                holder.Up.setBackgroundColor(Color.parseColor("#D97904"));
+                holder.Up.setBackgroundColor(Color.parseColor("#b71c1c"));
+                holder.UpDown.setImageResource(R.drawable.down);
 
                 break;
 
             case "1":
-                holder.Up.setBackgroundColor(Color.parseColor("#4F7302"));
+
+                holder.Up.setBackgroundColor(Color.parseColor("#8bc34a"));
+                holder.UpDown.setImageResource(R.drawable.up);
                 break;
 
 
@@ -108,6 +112,7 @@ public class AdapterRecyclerActivist extends RecyclerView.Adapter<com.example.ac
         TextView Phone ;
         TextView ElectorKey ;
         LinearLayout Up ;
+        ImageView UpDown;
 
 
 
@@ -119,6 +124,7 @@ public class AdapterRecyclerActivist extends RecyclerView.Adapter<com.example.ac
             Phone=itemView.findViewById(R.id.Phone);
             ElectorKey=itemView.findViewById(R.id.ElectorKey);
             Up=itemView.findViewById(R.id.UP);
+            UpDown=itemView.findViewById(R.id.imageViewUp);
 
 
         }
