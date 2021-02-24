@@ -13,4 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/Col1</item>
+        <item name="colorPrimaryDark">@color/Col2</item>
+        <item name="colorAccent">@color/Col3</item>
+    </style>
+
+
 </resources>

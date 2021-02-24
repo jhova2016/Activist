@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,6 +35,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView BtnExit;
 
     AlertDialog waitUploadData;
+
+    TextView FechaDeEvento;
 
     int Aux2=0;
 
@@ -182,14 +186,14 @@ public class MainActivity extends AppCompatActivity {
                         ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getDirectBoss(),
                         ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getNotes(),
                         ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getDate(),
+                        ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getSection(),
+                        ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getBirthday(),
                         ElementsRecyclerActivis.get(RecyclerViewActivist.getChildAdapterPosition(v)).getUp()
                 );
                 DialogInformationActivist.show();
 
             }
         });
-
-
 
         BtnSaveFirestorage.setOnClickListener(v -> FillArray());
 
@@ -258,13 +262,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void FillFirebase()
     {
-
-
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-
 
 
             int Aux=Remaining();
@@ -316,68 +317,127 @@ public class MainActivity extends AppCompatActivity {
                             if(CheckEList(w.getString(w.getColumnIndex("electorkey"))))
                             {
 
-                                File imgFile = new File(w.getString(w.getColumnIndex("photopath")));
-                                if(imgFile.exists()){
+                                if(w.getString(w.getColumnIndex("photopath"))!=null)
+                                {
+                                    File imgFile = new File(w.getString(w.getColumnIndex("photopath")));
 
-                                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                    compressedFile = Bitmap.createScaledBitmap(myBitmap, 720, 720, true);
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    compressedFile.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                                    if(imgFile.exists()){
 
-                                    byte[] data = baos.toByteArray();
-                                    filePath.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                        compressedFile = Bitmap.createScaledBitmap(myBitmap, 720, 720, true);
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        compressedFile.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
-                                        @Override
-                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                            // Add a new document with a generated ID
-                                            db.collection("Elements")
-                                                    .add(Activist)
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference documentReference) {
+                                        byte[] data = baos.toByteArray();
+                                        filePath.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 
 
 
-                                                            db.collection("ElectorKeys")
-                                                                    .add(ElectorKey)
-                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                                        @Override
-                                                                        public void onSuccess(DocumentReference documentReference) {
+                                            @Override
+                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                // Add a new document with a generated ID
+                                                db.collection("Elements")
+                                                        .add(Activist)
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentReference documentReference) {
 
-                                                                            String[] args = new String []{"1",AuxId};
 
-                                                                            dbsql2.execSQL("UPDATE tabladecalles SET up=? WHERE  _id=?",args);
 
-                                                                            Aux2++;
-                                                                            if(Aux2==Aux)
-                                                                            {
-                                                                                FillRecycler();
-                                                                                waitUploadData.dismiss();
+                                                                db.collection("ElectorKeys")
+                                                                        .add(ElectorKey)
+                                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                            @Override
+                                                                            public void onSuccess(DocumentReference documentReference) {
+
+                                                                                String[] args = new String []{"1",AuxId};
+
+                                                                                dbsql2.execSQL("UPDATE tabladecalles SET up=? WHERE  _id=?",args);
+
+                                                                                Aux2++;
+                                                                                if(Aux2==Aux)
+                                                                                {
+                                                                                    FillRecycler();
+                                                                                    waitUploadData.dismiss();
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Log.w(TAG, "Error adding document", e);
-                                                                        }
-                                                                    });
+                                                                        })
+                                                                        .addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.w(TAG, "Error adding document", e);
+                                                                            }
+                                                                        });
 
 
 
 
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.w(TAG, "Error adding document", e);
-                                                        }
-                                                    });
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w(TAG, "Error adding document", e);
+                                                            }
+                                                        });
 
-                                        }
-                                    });
+                                            }
+                                        });
+                                    }
+
                                 }
+                                else
+                                {
+
+                                    db.collection("Elements")
+                                            .add(Activist)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+
+
+
+                                                    db.collection("ElectorKeys")
+                                                            .add(ElectorKey)
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentReference documentReference) {
+
+                                                                    String[] args = new String []{"1",AuxId};
+
+                                                                    dbsql2.execSQL("UPDATE tabladecalles SET up=? WHERE  _id=?",args);
+
+                                                                    Aux2++;
+                                                                    if(Aux2==Aux)
+                                                                    {
+                                                                        FillRecycler();
+                                                                        waitUploadData.dismiss();
+                                                                    }
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w(TAG, "Error adding document", e);
+                                                                }
+                                                            });
+
+
+
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
+
+                                }
+
+
+
 
                             }else
                             {
@@ -397,6 +457,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }catch (Exception e)
                     {
+                        Toast.makeText(this,"Error ",Toast.LENGTH_LONG).show();
 
                     }
 
@@ -406,6 +467,7 @@ public class MainActivity extends AppCompatActivity {
 
             }else
             {Toast.makeText(this, "Todas las personas ya estan registradas :)", Toast.LENGTH_SHORT).show();
+                waitUploadData.dismiss();
             }
 
         } else {
@@ -424,11 +486,10 @@ public class MainActivity extends AppCompatActivity {
         final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
 
 
-        w= dbsql2.rawQuery("SELECT _id ,photopath ,name ,direction ,phone ,electorkey ,directboss ,notes ,date ,up    FROM tabladecalles", null);
+        w= dbsql2.rawQuery("SELECT _id ,photopath ,name ,direction ,phone ,electorkey ,directboss ,notes ,date ,section ,birthday ,up    FROM tabladecalles", null);
         w.moveToFirst();
         do
         {
-
 
             try {
 
@@ -442,6 +503,8 @@ public class MainActivity extends AppCompatActivity {
                         (w.getString(w.getColumnIndex("directboss"))),
                         (w.getString(w.getColumnIndex("notes"))),
                         (w.getString(w.getColumnIndex("date"))),
+                        (w.getString(w.getColumnIndex("section"))),
+                        (w.getString(w.getColumnIndex("birthday"))),
                         (w.getString(w.getColumnIndex("up"))))
 
                 );
@@ -451,7 +514,6 @@ public class MainActivity extends AppCompatActivity {
             {
 
             }
-
 
             AdapterElementRecyclerActivist.notifyDataSetChanged();
             RecyclerViewActivist.setAdapter(AdapterElementRecyclerActivist);
@@ -468,8 +530,6 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("&&&&&&&&&&&&&&&&&&&&& ElementsEK.get(i)= "+ElementsEK.get(i)+"    "+"EK= "+EK);
             if(ElementsEK.get(i).equals(EK))
             {
-
-
                 Aux=false;
             }
 
@@ -481,7 +541,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Insertar un nuevo comentario
-    public void InsertToDB(String PhotoPath,String name,String direction, String phone, String electrokey, String directboss, String notes,String date,String up){
+    public void InsertToDB(String PhotoPath,
+                           String name,
+                           String direction,
+                           String phone,
+                           String electrokey,
+                           String directboss,
+                           String notes,
+                           String date,
+                           String section,
+                           String birthday,
+                           String up){
 
 
         BD_Calles dbHelper = new BD_Calles(this);
@@ -490,8 +560,8 @@ public class MainActivity extends AppCompatActivity {
         if (db != null) {
             if(!name.equals("")&&!direction.equals("")&&!phone.equals("")&&!electrokey.equals("")&&!name.equals(""))
             {
-                if(PhotoPath!=null)
-                {
+               // if(PhotoPath!=null)
+
                     ContentValues casa =new ContentValues();
 
                     casa.put("photopath",PhotoPath);
@@ -502,6 +572,8 @@ public class MainActivity extends AppCompatActivity {
                     casa.put("directboss", directboss);
                     casa.put("notes", notes);
                     casa.put("date", date);
+                    casa.put("section", section);
+                    casa.put("birthday", birthday);
                     casa.put("up", up);
 
 
@@ -509,23 +581,14 @@ public class MainActivity extends AppCompatActivity {
                     DialogNewActivist.dismiss();
                     FillRecycler();
 
-                }else
-                {
-                    Toast.makeText(this,"Falta capturar la foto", Toast.LENGTH_LONG).show();
-                }
+
 
             }
             else
             {
                 Toast.makeText(this,"Todos Los campos con * deben ser llenados", Toast.LENGTH_LONG).show();
-
             }
-
-
-
         }
-
-
     }
 
 
@@ -541,7 +604,6 @@ public class MainActivity extends AppCompatActivity {
         Button BtnSave=view.findViewById(R.id.BtnSave);
         Button BtnCancel=view.findViewById(R.id.BtnCancel);
 
-
         FloatingActionButton BtnPhoto   =view.findViewById(R.id.FABPhoto);
         Photo                 =view.findViewById(R.id.Photo);
         EditText Name                   =view.findViewById(R.id.EditName);
@@ -549,6 +611,10 @@ public class MainActivity extends AppCompatActivity {
         EditText ElectorKey             =view.findViewById(R.id.EditElectorKey);
         EditText Notes                =view.findViewById(R.id.EditNotes);
         EditText Phone                  =view.findViewById(R.id.EditPhone);
+        EditText Section                  =view.findViewById(R.id.EditSection);
+        TextView Birthday                  =view.findViewById(R.id.EditBirthday);
+
+
 
         BtnPhoto.setOnClickListener(v -> {
 
@@ -558,13 +624,35 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+        Birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar Calendario= Calendar.getInstance();
+                int Dia=Calendario.get(Calendar.DAY_OF_MONTH);
+                int Mes=Calendario.get(Calendar.MONTH);
+                int Año=Calendario.get(Calendar.YEAR);
+
+                DatePickerDialog CalendarioDialog=new DatePickerDialog(MainActivity.this, R.style.datepicker, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month=month+1;
+                        Birthday.setText(dayOfMonth+"/"+month+"/"+year);
+
+
+                    }
+                },Año,Mes,Dia);
+
+                CalendarioDialog.show();
+            }
+        });
+
+
         sharedPreferences = this.getSharedPreferences("REGISTRO", MODE_PRIVATE);
 
-
-
-        BtnSave.setOnClickListener(v -> InsertToDB(currentPhotoPath,Name.getText().toString(),Direction.getText().toString(),Phone.getText().toString(),ElectorKey.getText().toString(),sharedPreferences.getString("ElectorKey", "Null"),Notes.getText().toString(),GetDate(),"0"));
+        BtnSave.setOnClickListener(v -> InsertToDB(currentPhotoPath,Name.getText().toString(),Direction.getText().toString(),Phone.getText().toString(),ElectorKey.getText().toString(),sharedPreferences.getString("ElectorKey", "Null"),Notes.getText().toString(),GetDate(),Section.getText().toString(),Birthday.getText().toString(),"0"));
         BtnCancel.setOnClickListener(v -> DialogNewActivist.dismiss());
-
 
         builder.setView(view);
         DialogNewActivist =builder.create();
@@ -578,8 +666,6 @@ public class MainActivity extends AppCompatActivity {
         int Mes=Calendario.get(Calendar.MONTH);
         Mes=Mes+1;
         String Date=Calendario.get(Calendar.DAY_OF_MONTH)+"/"+Mes+"/"+Calendario.get(Calendar.YEAR);
-
-
 
         return Date;
     }
@@ -621,8 +707,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -647,11 +731,6 @@ public class MainActivity extends AppCompatActivity {
         {
             currentPhotoPath=null;
         }
-
-
-
-
-
     }
 
 
@@ -672,10 +751,6 @@ public class MainActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
-
-
-
-
     }
 
     public String getImageFileName() {
@@ -693,6 +768,8 @@ public class MainActivity extends AppCompatActivity {
             String directBoss,
             String notes ,
             String date ,
+            String section ,
+            String birthday ,
             String up )
     {
         currentPhotoPath=null;
@@ -711,6 +788,8 @@ public class MainActivity extends AppCompatActivity {
         EditText Phone=view.findViewById(R.id.Phone);
         EditText ElectorKey=view.findViewById(R.id.ElectorKey);
         EditText Notes=view.findViewById(R.id.Notes);
+        EditText Section                  =view.findViewById(R.id.EditSection);
+        TextView Birthday                  =view.findViewById(R.id.EditBirthday);
 
         TextView Auxphoto=view.findViewById(R.id.Date);
         TextView Up=view.findViewById(R.id.Up);
@@ -728,10 +807,10 @@ public class MainActivity extends AppCompatActivity {
         ElectorKey.setEnabled(false);
         Notes.setEnabled(false);
         Save.setEnabled(false);
+        Section.setEnabled(false);
+        Birthday.setEnabled(false);
 
-       AuxPhotoPath=photoPath;
-
-
+                AuxPhotoPath=photoPath;
 
         Name.setText(name);
         Direction.setText(direction);
@@ -739,7 +818,35 @@ public class MainActivity extends AppCompatActivity {
         ElectorKey.setText(electorKey);
         Notes.setText(notes);
         Auxphoto.setText(date);
+        Section.setText(section);
+        Birthday.setText(birthday);
         Up.setText(up);
+
+
+        Birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar Calendario= Calendar.getInstance();
+                int Dia=Calendario.get(Calendar.DAY_OF_MONTH);
+                int Mes=Calendario.get(Calendar.MONTH);
+                int Año=Calendario.get(Calendar.YEAR);
+
+                DatePickerDialog CalendarioDialog=new DatePickerDialog(MainActivity.this, R.style.datepicker, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month=month+1;
+                        Birthday.setText(dayOfMonth+"/"+month+"/"+year);
+
+
+                    }
+                },Año,Mes,Dia);
+
+                CalendarioDialog.show();
+            }
+        });
+
+
 
        try {
            File imgFile = new File(AuxPhotoPath);
@@ -747,9 +854,6 @@ public class MainActivity extends AppCompatActivity {
 
                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                Photo.setImageBitmap(myBitmap);
-
-
-
            }
 
        }catch (Exception e)
@@ -785,8 +889,15 @@ public class MainActivity extends AppCompatActivity {
                BD_Calles dbHelper2 = new BD_Calles(this);
                final SQLiteDatabase dbsql2 = dbHelper2.getWritableDatabase();
 
-               String[] args = new String []{AuxPhotoPath,Name.getText().toString(),Direction.getText().toString(),Phone.getText().toString(),ElectorKey.getText().toString(),Notes.getText().toString(),Id};
-               dbsql2.execSQL("UPDATE tabladecalles SET photopath=? ,name=? ,direction=? ,phone=? ,electorkey=? ,notes=? WHERE  _id=?",args);
+               String[] args = new String []{AuxPhotoPath,
+                       Name.getText().toString(),
+                       Direction.getText().toString(),
+                       Phone.getText().toString(),
+                       ElectorKey.getText().toString(),
+                       Notes.getText().toString(),
+                       Section.getText().toString(),
+                       Birthday.getText().toString(),Id};
+               dbsql2.execSQL("UPDATE tabladecalles SET photopath=? ,name=? ,direction=? ,phone=? ,electorkey=? ,notes=? ,section=? ,birthday=? WHERE  _id=?",args);
                DialogInformationActivist.dismiss();
                FillRecycler();
            }
@@ -795,9 +906,6 @@ public class MainActivity extends AppCompatActivity {
                Toast.makeText(this,"Todos Los campos con * deben ser llenados", Toast.LENGTH_LONG).show();
 
            }
-
-
-
 
        });
 
@@ -818,6 +926,8 @@ public class MainActivity extends AppCompatActivity {
                Phone.setEnabled(true);
                ElectorKey.setEnabled(true);
                Notes.setEnabled(true);
+               Section.setEnabled(true);
+               Birthday.setEnabled(true);
            }
            else
            {
@@ -833,17 +943,9 @@ public class MainActivity extends AppCompatActivity {
 
 
        });
-
-
-
-
-
         builder.setView(view);
         DialogInformationActivist =builder.create();
         DialogInformationActivist.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-
     }
 
     private void DialogExit()

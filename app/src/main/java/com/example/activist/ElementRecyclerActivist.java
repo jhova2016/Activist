@@ -12,9 +12,11 @@ public class ElementRecyclerActivist {
     String DirectBoss;
     String Notes ;
     String Date ;
+    String Section;
+    String Birthday ;
     String Up ;
 
-    public ElementRecyclerActivist(String id, String photoPath, String name, String direction, String phone, String electorKey, String directBoss, String notes, String date, String up) {
+    public ElementRecyclerActivist(String id, String photoPath, String name, String direction, String phone, String electorKey, String directBoss, String notes, String date, String section, String birthday, String up) {
         Id = id;
         PhotoPath = photoPath;
         Name = name;
@@ -24,7 +26,25 @@ public class ElementRecyclerActivist {
         DirectBoss = directBoss;
         Notes = notes;
         Date = date;
+        Section = section;
+        Birthday = birthday;
         Up = up;
+    }
+
+    public String getSection() {
+        return Section;
+    }
+
+    public void setSection(String section) {
+        Section = section;
+    }
+
+    public String getBirthday() {
+        return Birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        Birthday = birthday;
     }
 
     public String getId() {
