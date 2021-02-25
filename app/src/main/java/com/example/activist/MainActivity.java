@@ -71,6 +71,7 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
+    AlertDialog DialogDialogLoadData;
     AlertDialog DialogExitSession;
     ImageView Photo;
     AlertDialog DialogNewActivist;
@@ -102,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
     TextView FechaDeEvento;
 
     int Aux2=0;
+
+    AlertDialog DialogOpciones;
 
     final ArrayList<String> ElementsEK = new ArrayList<>();
 
@@ -165,8 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
         BtnExit.setOnClickListener(v ->
         {
-            DialogExit();
-            DialogExitSession.show();
+
+            DialogOpcionesFuncion ();
+            DialogOpciones.show();
+
+
 
         });
 
@@ -195,7 +201,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        BtnSaveFirestorage.setOnClickListener(v -> FillArray());
+        BtnSaveFirestorage.setOnClickListener(v ->
+                {
+                    DialogLoadData();
+                    DialogDialogLoadData.show();
+
+
+                }
+        );
 
         FAB_NewActivist.setOnClickListener(v ->
         {
@@ -204,6 +217,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void DialogOpcionesFuncion ()
+    {
+        android.app.AlertDialog.Builder builder=new android.app.AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_opciones,null);
+
+
+        Button BtnCerrarSesion;
+        BtnCerrarSesion=view.findViewById(R.id.BtnOpcionesDialog2);
+
+        BtnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogExit();
+                DialogExitSession.show();
+            }
+        });
+
+        builder.setView(view);
+        DialogOpciones=builder.create();
+        DialogOpciones.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     public int Remaining()
@@ -994,6 +1030,41 @@ public class MainActivity extends AppCompatActivity {
         DialogExitSession.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
+
+
+    private void DialogLoadData()
+    {
+
+        android.app.AlertDialog.Builder builder=new android.app.AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_aceptar_cancelar,null);
+
+        TextView Titulo =view.findViewById(R.id.TituloAC);
+        TextView Descripcion =view.findViewById(R.id.DescripcionAC);
+        Button BtnAceptar=view.findViewById(R.id.BtnAceptarDialogEliminarEvento);
+        Button BtnCancelar=view.findViewById(R.id.BtnCancelarDialogEliminarEvento);
+
+        Titulo.setText("Desea respaldar datos?");
+        Descripcion.setText("Se respaldaran los datos en la nube, concidere los siguientes puntos:" +
+                "\n-Asegurese que su clave de elector sea correcta."+
+                "\n-Asegurese que todos los datos sean corractos. " +
+                "\n-Los datos subidos no se podran editar."+
+                "\n-Los datos subidos no se podran borrar."+
+                "\n-Duplicados en la base de datos no se respaldaran, esto quiere decir que si otra persona respaldo la infomacion primero la suya se rechazara. ");
+
+        BtnAceptar.setOnClickListener(v -> FillArray());
+
+        BtnCancelar.setOnClickListener(v -> DialogDialogLoadData.dismiss());
+
+
+
+        builder.setView(view);
+        DialogDialogLoadData =builder.create();
+        DialogDialogLoadData.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+    }
+
+
 
     private void DialogEliminarActivist(final String EntId)
     {

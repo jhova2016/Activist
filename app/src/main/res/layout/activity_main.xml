@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@color/Col2"
+    android:background="@color/Col1"
     android:orientation="vertical">
 
     <LinearLayout
@@ -71,6 +71,44 @@
     </LinearLayout>
 
 
+    <androidx.cardview.widget.CardView
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/Col5"
+        android:layout_margin="6dp"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Información"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="La fecha limite es el 28 d marzo cualquier aclaracion  mande wasap al 9711756045"
+                />
+
+
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
 
 
@@ -81,8 +119,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="@color/Hint"
+
+        app:cardBackgroundColor="@color/Col1"
         android:layout_weight="1"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
