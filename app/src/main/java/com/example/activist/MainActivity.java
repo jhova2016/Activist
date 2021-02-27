@@ -49,6 +49,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
     int Aux2=0;
 
     AlertDialog DialogOpciones;
+
+    TextView INFO;
 
     final ArrayList<String> ElementsEK = new ArrayList<>();
 
@@ -215,6 +218,24 @@ public class MainActivity extends AppCompatActivity {
             DialogNewActivist();
             DialogNewActivist.show();
         });
+
+
+
+        INFO =findViewById(R.id.TextoInfo);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Props").document("GlobalText")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        INFO.setText(document.getString("Text"));
+
+                    }
+                } );
+
 
 
     }

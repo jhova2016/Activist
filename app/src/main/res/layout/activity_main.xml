@@ -87,13 +87,33 @@
             android:orientation="vertical"
             android:padding="16dp"
             >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:srcCompat="@drawable/info" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:text="Información"
+                android:textSize="18sp"
                 />
+
+        </LinearLayout>
+
+
             <TextView
+                android:id="@+id/TextoInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
